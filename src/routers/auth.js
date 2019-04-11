@@ -43,6 +43,17 @@ authRouter.post('/login', async (context, next) => {
 
 
 
+// Logout
+authRouter.post('/logout', async context => {
+  if (context.isAuthenticated()) {
+    context.logout()
+  }
+})
+
+
+
+
+
 // Register
 authRouter.post('/register', async (context, next) => {
   const {
