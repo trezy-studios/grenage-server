@@ -14,6 +14,7 @@ import compress from 'koa-compress'
 import cors from '@koa/cors'
 import logger from 'koa-logger'
 import noTrailingSlash from 'koa-no-trailing-slash'
+import RedisStore from 'koa-redis'
 import Router from 'koa-router'
 import session from 'koa-session'
 import path from 'path'
@@ -54,9 +55,9 @@ app.use(compress())
 app.use(cors())
 app.use(prepareDatabase())
 app.use(session({
-  key: 'grenage:session',
-  overwrite: true,
-  signed: true,
+  store: new RedisStore({
+    host: 'redis',
+  }),
 }, app))
 app.use(body())
 app.use(bodyBuilder())
@@ -67,10 +68,8 @@ const passport = require('koa-passport')
 app.use(passport.initialize())
 app.use(passport.session())
 
-router.use('/auth', authRouter.routes(), authRouter.allowedMethods())
-
-app.use(authRouter.routes())
-app.use(authRouter.allowedMethods())
+router.use('/auth', authRouter.routes())
+app.use(router.routes())
 
 console.log(`HTTP Server listening on port ${process.env.GRENAGE_API_PORT}`)
 app.listen(process.env.GRENAGE_API_PORT)
