@@ -1,0 +1,26 @@
+app:
+  image: node
+  command: sh -c "yarn install && yarn migrate && yarn seed && yarn dev"
+  environment:
+    - GRENAGE_API_DB_NAME
+    - GRENAGE_API_DB_PASS
+    - GRENAGE_API_DB_USER
+    - GRENAGE_API_PORT
+    - GRENAGE_REPOSITORY_URL
+  links:
+    - postgres
+  ports:
+    - "3001:3001"
+  volumes:
+    - .:/app
+  working_dir: /app
+
+postgres:
+  image: postgres:11-alpine
+  environment:
+    - POSTGRES_DB=${GRENAGE_API_DB_NAME}
+    - POSTGRES_HOST=postgres
+    - POSTGRES_PASSWORD=${GRENAGE_API_DB_PASS}
+    - POSTGRES_USER=${GRENAGE_API_DB_USER}
+  ports:
+    - "5432:5432"
