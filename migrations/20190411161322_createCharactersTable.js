@@ -8,7 +8,7 @@ module.exports = {
       table.string('name').unique().notNullable()
       table.integer('experiencePoints').notNullable()
       table.integer('hitPoints').notNullable()
-      table.uuid('userID')
+      table.uuid('userID').notNullable()
       table.foreign('userID').references('users.id')
       table.timestamps(false, true)
     })
