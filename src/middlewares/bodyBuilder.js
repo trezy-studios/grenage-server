@@ -11,8 +11,6 @@ const bodyBuilder = () => async (context, next) => {
   if (context.errors.length) {
     body.errors = context.errors
   } else if (context.data) {
-    delete context.data.password
-
     body = {
       ...body,
       ...context.data,
