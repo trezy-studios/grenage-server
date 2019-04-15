@@ -36,4 +36,20 @@ usersRouter.get('/', async (context, next) => {
 
 
 
+// Get user by ID
+usersRouter.get('/:id', async (context, next) => {
+  if (!context.isAuthenticated()) {
+    context.errors.push('User is not authenticated')
+    return context.status = 403
+  }
+
+  const user = new UserModel(await context.knex('users').where({ id: context.params.id }).first())
+
+  context.data = user.render()
+})
+
+
+
+
+
 export { usersRouter }
