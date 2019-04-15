@@ -32,7 +32,10 @@ authRouter.post('/login', async (context, next) => {
   return passport.authenticate('local', async (error, user, info, status) => {
     if (user) {
       await context.login(user)
-      context.data = UserPresenter.render(user)
+
+      const userModel = new UserModel(user)
+
+      context.data = userModel.render()
     } else {
       context.errors = [status]
     }
@@ -66,16 +69,18 @@ authRouter.post('/register', async (context, next) => {
       email: email,
       password: bcrypt.hashSync(password, bcrypt.genSaltSync()),
     })
-    const results = await context.knex('users').insert(userModel.attributes).returning('*')
+    const [newUser] = await context.knex('users').insert(userModel.attributes).returning('*')
+
+    userModel.update(newUser)
 
     return passport.authenticate('local', async (error, user, info, status) => {
       if (user) {
         await context.login(user)
-        context.data = UserPresenter.render(user)
+        context.data = userModel.render()
       } else {
         context.errors = [status]
       }
-    })(context, next)
+    })(context)
   } catch (error) {
     context.errors = [error]
   }
