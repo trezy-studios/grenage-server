@@ -1,6 +1,4 @@
 // Module imports
-import bcrypt from 'bcryptjs'
-import passport from 'koa-passport'
 import Router from 'koa-router'
 
 
@@ -8,7 +6,6 @@ import Router from 'koa-router'
 
 
 // Local imports
-import { authenticated } from '../helpers'
 import { CharacterPresenter } from '../presenters'
 import { CharacterModel } from '../models'
 
@@ -17,14 +14,14 @@ import { CharacterModel } from '../models'
 
 
 // Local constants
-const characterRouter = new Router({ prefix: '/characters' })
+const charactersRouter = new Router({ prefix: '/characters' })
 
 
 
 
 
 // Get characters for current user
-characterRouter.get('/', async (context, next) => {
+charactersRouter.get('/', async (context, next) => {
   if (!context.isAuthenticated()) {
     context.errors.push('User is not authenticated')
     return context.status = 403
@@ -41,7 +38,7 @@ characterRouter.get('/', async (context, next) => {
 
 
 // Create new character
-characterRouter.post('/new', async (context, next) => {
+charactersRouter.post('/new', async (context, next) => {
   if (!context.isAuthenticated()) {
     context.errors.push('User is not authenticated')
     return context.status = 403
@@ -66,7 +63,7 @@ characterRouter.post('/new', async (context, next) => {
 
 
 // Get character by ID
-characterRouter.get('/:id', async (context, next) => {
+charactersRouter.get('/:id', async (context, next) => {
   if (!context.isAuthenticated()) {
     context.errors.push('User is not authenticated')
     return context.status = 403
@@ -81,4 +78,4 @@ characterRouter.get('/:id', async (context, next) => {
 
 
 
-export { characterRouter }
+export { charactersRouter }

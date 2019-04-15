@@ -32,7 +32,8 @@ import {
 import { generateRandomKey } from './helpers'
 import {
   authRouter,
-  characterRouter,
+  charactersRouter,
+  usersRouter,
 } from './routers'
 
 
@@ -73,7 +74,8 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 router.use(authRouter.routes())
-router.use(characterRouter.routes())
+router.use(charactersRouter.routes())
+router.use(usersRouter.routes())
 app.use(router.routes())
 
 console.log(`HTTP Server listening on port ${GRENAGE_API_PORT}`)
