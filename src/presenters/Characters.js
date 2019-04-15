@@ -28,14 +28,10 @@ class CharacterPresenter extends Presenter {
   \***************************************************************************/
 
   attributes () {
-    const attributes = super.attributes.apply(this, arguments)
-
-    return attributes
+    return super.attributes.apply(this, arguments)
   }
 
-  relationships = () => {
-    return {}
-  }
+  relationships = () => ({})
 }
 
 

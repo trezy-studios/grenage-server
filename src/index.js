@@ -30,20 +30,24 @@ import {
   preparePassport,
 } from './middlewares'
 import { generateRandomKey } from './helpers'
-import { authRouter } from './routers'
+import {
+  authRouter,
+  characterRouter,
+} from './routers'
 
 
 
 
 
 // Constants
+const {
+  GRENAGE_API_PORT,
+  GRENAGE_API_SECRET_KEY,
+} = process.env
 const app = new Koa()
 const router = new Router()
 
-app.keys = [
-  generateRandomKey(),
-  generateRandomKey(),
-]
+app.keys = [GRENAGE_API_SECRET_KEY]
 
 
 
@@ -68,8 +72,9 @@ const passport = require('koa-passport')
 app.use(passport.initialize())
 app.use(passport.session())
 
-router.use('/auth', authRouter.routes())
+router.use(authRouter.routes())
+router.use(characterRouter.routes())
 app.use(router.routes())
 
-console.log(`HTTP Server listening on port ${process.env.GRENAGE_API_PORT}`)
-app.listen(process.env.GRENAGE_API_PORT)
+console.log(`HTTP Server listening on port ${GRENAGE_API_PORT}`)
+app.listen(GRENAGE_API_PORT)

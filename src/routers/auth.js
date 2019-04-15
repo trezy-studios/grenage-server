@@ -16,7 +16,7 @@ import { UserModel } from '../models'
 
 
 // Local constants
-const authRouter = new Router
+const authRouter = new Router({ prefix: '/auth' })
 
 
 

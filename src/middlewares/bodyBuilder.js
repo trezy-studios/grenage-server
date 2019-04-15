@@ -4,9 +4,11 @@ const bodyBuilder = () => async (context, next) => {
   }
   let body = {}
 
+  context.errors = []
+
   await next()
 
-  if (context.errors) {
+  if (context.errors.length) {
     body.errors = context.errors
   } else if (context.data) {
     delete context.data.password
