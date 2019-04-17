@@ -5,6 +5,13 @@ import yayson from 'yayson'
 
 
 
+// Local imports
+import { CharactersPresenter } from '.'
+
+
+
+
+
 // Local constants
 const { Presenter } = yayson({ adapter: 'default' })
 
@@ -12,7 +19,7 @@ const { Presenter } = yayson({ adapter: 'default' })
 
 
 
-class UserPresenter extends Presenter {
+class UsersPresenter extends Presenter {
   /***************************************************************************\
     Class Properties
   \***************************************************************************/
@@ -33,8 +40,10 @@ class UserPresenter extends Presenter {
     return attributes
   }
 
-  relationships = () => {
-    return {}
+  relationships = () => ({ characters: CharactersPresenter })
+
+  selfLinks = instance => {
+    return `/${instance.type}/${instance.id}`
   }
 }
 
@@ -42,4 +51,4 @@ class UserPresenter extends Presenter {
 
 
 
-export { UserPresenter }
+export { UsersPresenter }

@@ -33,13 +33,8 @@ class BaseModel {
     this.attributes = attributes
   }
 
-  relationships = () => ({})
-
   render = () => {
-    return this.presenter.render({
-      ...this.attributes,
-      ...this.links,
-    })
+    return this.presenter.render({ ...this.attributes })
   }
 
   update = updates => {
@@ -75,14 +70,6 @@ class BaseModel {
 
   get attributes () {
     return this._attributes || (this._attributes = {})
-  }
-
-  get links () {
-    return {
-      links: {
-        self: `/${this.type}/${this._attributes.id}`,
-      },
-    }
   }
 
 

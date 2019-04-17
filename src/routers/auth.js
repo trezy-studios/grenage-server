@@ -8,7 +8,7 @@ import Router from 'koa-router'
 
 
 // Local imports
-import { UserPresenter } from '../presenters'
+import { UsersPresenter } from '../presenters'
 import { UserModel } from '../models'
 
 

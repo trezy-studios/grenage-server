@@ -6,8 +6,11 @@ import Router from 'koa-router'
 
 
 // Local imports
-import { UserPresenter } from '../presenters'
-import { UserModel } from '../models'
+import { UsersPresenter } from '../presenters'
+import {
+  CharacterModel,
+  UserModel,
+} from '../models'
 
 
 
@@ -27,9 +30,16 @@ usersRouter.get('/', async (context, next) => {
     return context.status = 403
   }
 
-  const user = new UserModel(await context.knex('users').where({ id: context.state.user.id }).first())
+  const user = await context.knex('users').where({ id: context.state.user.id })
+  const characters = await context.knex('characters').where({ userID: context.state.user.id })
 
-  context.data = user.render()
+  const userModel = new UserModel(await context.knex('users').where({ id: context.state.user.id }).first())
+
+  userModel.update({
+    characters,
+  })
+
+  context.data = userModel.render()
 })
 
 

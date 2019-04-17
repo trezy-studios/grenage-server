@@ -1,8 +1,2 @@
-// Module imports
-import { exportDirectory } from '../helpers'
-
-
-
-
-
-module.exports = exportDirectory(__dirname)
+export * from './Characters'
+export * from './Users'

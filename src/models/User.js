@@ -7,7 +7,10 @@ import uuid from 'uuid/v4'
 
 // Local imports
 import { BaseModel } from './Base'
-import { UserPresenter } from '../presenters'
+import {
+  CharactersPresenter,
+  UsersPresenter,
+} from '../presenters'
 
 
 
@@ -18,7 +21,7 @@ class UserModel extends BaseModel {
     Class Properties
   \***************************************************************************/
 
-  presenter = UserPresenter
+  presenter = UsersPresenter
 
   requiredAttributes = [
     'email',
@@ -40,10 +43,7 @@ class UserModel extends BaseModel {
 
     delete safeAttributes.password
 
-    return this.presenter.render({
-      ...safeAttributes,
-      ...this.links,
-    })
+    return this.presenter.render({ ...safeAttributes })
   }
 }
 

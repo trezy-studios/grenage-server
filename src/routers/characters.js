@@ -6,7 +6,7 @@ import Router from 'koa-router'
 
 
 // Local imports
-import { CharacterPresenter } from '../presenters'
+import { CharactersPresenter } from '../presenters'
 import { CharacterModel } from '../models'
 
 
@@ -30,7 +30,7 @@ charactersRouter.get('/', async (context, next) => {
   const characters = await context.knex('characters').where({ userID: context.state.user.id })
   const characterModels = characters.map(character => new CharacterModel(character))
 
-  context.data = CharacterPresenter.render(characterModels.map(({ attributes }) => attributes))
+  context.data = CharactersPresenter.render(characterModels.map(({ attributes }) => attributes))
 })
 
 

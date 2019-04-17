@@ -12,7 +12,7 @@ const { Presenter } = yayson({ adapter: 'default' })
 
 
 
-class CharacterPresenter extends Presenter {
+class CharactersPresenter extends Presenter {
   /***************************************************************************\
     Class Properties
   \***************************************************************************/
@@ -38,4 +38,4 @@ class CharacterPresenter extends Presenter {
 
 
 
-export { CharacterPresenter }
+export { CharactersPresenter }

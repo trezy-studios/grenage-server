@@ -7,7 +7,7 @@ import uuid from 'uuid/v4'
 
 // Local imports
 import { BaseModel } from '.'
-import { CharacterPresenter } from '../presenters'
+import { CharactersPresenter } from '../presenters'
 
 
 
@@ -18,7 +18,7 @@ class CharacterModel extends BaseModel {
     Class Properties
   \***************************************************************************/
 
-  presenter = CharacterPresenter
+  presenter = CharactersPresenter
 
   requiredAttributes = [
     'ancestry',
