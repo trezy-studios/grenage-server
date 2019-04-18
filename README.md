@@ -11,6 +11,12 @@ This is the repository for the Grenage server.
     yarn install
     ```
 
+1. Setup your `.env` file
+
+    ```
+    cp .env.example .env
+    ```
+
 1. Spin up the containers
 
     ```
