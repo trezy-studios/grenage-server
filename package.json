@@ -6,9 +6,12 @@
   "scripts": {
     "build": "babel src --out-dir dist",
     "dev": "nodemon --exec babel-node src/index.js",
+    "start-containers": "yarn start-database-containers && yarn start-app-container",
     "migrate": "knex migrate:latest --env development",
     "seed": "knex seed:run --env development",
     "start": "node dist/index.js",
+    "start-app-container": "docker-compose up app",
+    "start-database-containers": "docker-compose up -d postgres redis",
     "test": "mocha --recursive --require @babel/register"
   },
   "dependencies": {
