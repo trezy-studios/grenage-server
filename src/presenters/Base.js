@@ -6,22 +6,24 @@ import yayson from 'yayson'
 
 
 // Local constants
-import { BasePresenter } from '.'
+const { Presenter } = yayson({ adapter: 'default' })
 
 
 
 
 
-class CharactersPresenter extends BasePresenter {
+class BasePresenter extends Presenter {
   /***************************************************************************\
-    Class Properties
+    Public Methods
   \***************************************************************************/
 
-  type = 'characters'
+  selfLinks = instance => {
+    return `/${this.type}/${instance.id}`
+  }
 }
 
 
 
 
 
-export { CharactersPresenter }
+export { BasePresenter }

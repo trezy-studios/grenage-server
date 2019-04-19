@@ -1,5 +1,4 @@
 // Module imports
-import bcrypt from 'bcryptjs'
 import passport from 'koa-passport'
 import Router from 'koa-router'
 
@@ -8,7 +7,6 @@ import Router from 'koa-router'
 
 
 // Local imports
-import { UsersPresenter } from '../presenters'
 import { UserModel } from '../models'
 
 
@@ -31,13 +29,13 @@ authRouter.post('/login', async (context, next) => {
 
   return passport.authenticate('local', async (error, user, info, status) => {
     if (user) {
-      await context.login(user)
-
       const userModel = new UserModel(user)
+
+      await context.login(user)
 
       context.data = userModel.render()
     } else {
-      context.errors = [status]
+      context.errors = [error]
     }
   })(context)
 })
@@ -66,12 +64,11 @@ authRouter.post('/register', async (context, next) => {
 
   try {
     const userModel = new UserModel({
-      email: email,
-      password: bcrypt.hashSync(password, bcrypt.genSaltSync()),
+      email,
+      password,
     })
-    const [newUser] = await context.knex('users').insert(userModel.attributes).returning('*')
 
-    userModel.update(newUser)
+    await userModel.save()
 
     return passport.authenticate('local', async (error, user, info, status) => {
       if (user) {
@@ -82,7 +79,7 @@ authRouter.post('/register', async (context, next) => {
       }
     })(context)
   } catch (error) {
-    context.errors = [error]
+    context.errors.push(error)
   }
 })
 

@@ -13,13 +13,13 @@ import { CharactersPresenter } from '.'
 
 
 // Local constants
-const { Presenter } = yayson({ adapter: 'default' })
+import { BasePresenter } from '.'
 
 
 
 
 
-class UsersPresenter extends Presenter {
+class UsersPresenter extends BasePresenter {
   /***************************************************************************\
     Class Properties
   \***************************************************************************/
@@ -34,17 +34,7 @@ class UsersPresenter extends Presenter {
     Public Methods
   \***************************************************************************/
 
-  attributes () {
-    const attributes = super.attributes.apply(this, arguments)
-
-    return attributes
-  }
-
   relationships = () => ({ characters: CharactersPresenter })
-
-  selfLinks = instance => {
-    return `/${instance.type}/${instance.id}`
-  }
 }
 
 

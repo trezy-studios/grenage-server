@@ -1,4 +1,5 @@
 // Module imports
+import bcrypt from 'bcryptjs'
 import uuid from 'uuid/v4'
 
 
@@ -39,11 +40,17 @@ class UserModel extends BaseModel {
   \***************************************************************************/
 
   render = () => {
-    const safeAttributes = this.attributes
+    const safeAttributes = { ...this.attributes }
 
     delete safeAttributes.password
 
     return this.presenter.render({ ...safeAttributes })
+  }
+
+  beforeSave = () => {
+    if (this.isNew) {
+      this.update({ password: bcrypt.hashSync(this.attributes.password, bcrypt.genSaltSync()) })
+    }
   }
 }
 

@@ -30,7 +30,7 @@ charactersRouter.get('/', async (context, next) => {
   const characters = await context.knex('characters').where({ userID: context.state.user.id })
   const characterModels = characters.map(character => new CharacterModel(character))
 
-  context.data = CharactersPresenter.render(characterModels.map(({ attributes }) => attributes))
+  context.data = CharactersPresenter.render(characterModels.map(characterModel => characterModel.render()))
 })
 
 
@@ -49,9 +49,9 @@ charactersRouter.post('/new', async (context, next) => {
       ...context.request.body,
       userID: context.state.user.id,
     })
-    const [newCharacter] = await context.knex('characters').insert(characterModel.attributes).returning('*')
 
-    characterModel.update(newCharacter)
+    characterModel.save()
+
     context.data = characterModel.render()
   } catch (error) {
     context.errors.push(error)

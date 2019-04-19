@@ -6,6 +6,13 @@ import yayson from 'yayson'
 
 
 
+// Module imports
+import knex from '../database'
+
+
+
+
+
 // Local constants
 const { Presenter } = yayson({ adapter: 'default' })
 
@@ -18,7 +25,32 @@ class BaseModel {
     Class Properties
   \***************************************************************************/
 
-  requiredProp = []
+  defaultAttributes = {}
+
+  requiredAttributes = []
+
+  type = 'unknown'
+
+
+
+
+
+  /***************************************************************************\
+    Public Methods
+  \***************************************************************************/
+  _afterSave = () => {
+    if (typeof this.afterSave === 'function') {
+      this.afterSave()
+    }
+  }
+
+  _beforeSave = () => {
+    this.validate()
+
+    if (typeof this.beforeSave === 'function') {
+      this.beforeSave()
+    }
+  }
 
 
 
@@ -28,13 +60,39 @@ class BaseModel {
     Public Methods
   \***************************************************************************/
 
-  constructor (attributes) {
+  constructor (attributes = {}) {
     // super()
+    this.isNew = !attributes.id
     this.attributes = attributes
   }
 
-  render = () => {
-    return this.presenter.render({ ...this.attributes })
+  findByID = async id => {
+    try {
+      const result = await knex(this.type).where({ id }).first()
+      this.update(result)
+    } catch (error) {
+      throw error
+    }
+  }
+
+  render = () => this.presenter.render({ ...this.attributes })
+
+  save = async () => {
+    try {
+      this._beforeSave()
+
+      const [result] = await knex(this.type).insert(this.attributes).returning('*')
+
+      this.update(result)
+
+      if (this.isNew) {
+        this.isNew = false
+      }
+
+      this._afterSave()
+    } catch (error) {
+      throw error
+    }
   }
 
   update = updates => {
@@ -69,7 +127,10 @@ class BaseModel {
   \***************************************************************************/
 
   get attributes () {
-    return this._attributes || (this._attributes = {})
+    return {
+      ...this.defaultAttributes,
+      ...this._attributes,
+    }
   }
 
 
@@ -81,13 +142,15 @@ class BaseModel {
   \***************************************************************************/
 
   set attributes (attributes) {
-    this._attributes = { ...attributes }
+    this._originalAttributes = attributes
+    this._attributes = {
+      ...this.defaultAttributes,
+      ...attributes,
+    }
 
     if (!attributes.id) {
       this._attributes.id = uuid()
     }
-
-    return this._attributes || (this._attributes = {})
   }
 }
 
