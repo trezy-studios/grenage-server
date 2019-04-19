@@ -33,6 +33,7 @@ import { generateRandomKey } from './helpers'
 import {
   authRouter,
   charactersRouter,
+  oauthRouter,
   usersRouter,
 } from './routers'
 
@@ -74,6 +75,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 router.use(authRouter.routes())
+router.use(oauthRouter.routes())
 router.use(charactersRouter.routes())
 router.use(usersRouter.routes())
 app.use(router.routes())
