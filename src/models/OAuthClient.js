@@ -14,6 +14,13 @@ import { OAuthClientPresenter } from '../presenters'
 
 
 
+// Local constants
+const type = 'oauth-clients'
+
+
+
+
+
 class OAuthClientModel extends BaseModel {
   /***************************************************************************\
     Class Properties
@@ -26,7 +33,9 @@ class OAuthClientModel extends BaseModel {
     'ownerID',
   ]
 
-  type = 'oauth-clients'
+  static type = type
+
+  type = type
 
 
 

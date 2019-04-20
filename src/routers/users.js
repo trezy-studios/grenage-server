@@ -25,7 +25,7 @@ const usersRouter = new Router({ prefix: '/users' })
 
 // Get current user
 usersRouter.get('/', async (context, next) => {
-  if (!context.isAuthenticated()) {
+  if (context.isUnauthenticated()) {
     context.errors.push('User is not authenticated')
     return context.status = 403
   }
@@ -48,7 +48,7 @@ usersRouter.get('/', async (context, next) => {
 
 // Get user by ID
 usersRouter.get('/:id', async (context, next) => {
-  if (!context.isAuthenticated()) {
+  if (context.isUnauthenticated()) {
     context.errors.push('User is not authenticated')
     return context.status = 403
   }

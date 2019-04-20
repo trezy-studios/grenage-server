@@ -13,6 +13,13 @@ import { CharactersPresenter } from '../presenters'
 
 
 
+// Local constants
+const type = 'characters'
+
+
+
+
+
 class CharacterModel extends BaseModel {
   /***************************************************************************\
     Class Properties
@@ -28,7 +35,9 @@ class CharacterModel extends BaseModel {
     'userID',
   ]
 
-  type = 'characters'
+  static type = type
+
+  type = type
 }
 
 

@@ -15,6 +15,7 @@ import knex from '../database'
 
 // Local constants
 const { Presenter } = yayson({ adapter: 'default' })
+const type = 'unknown'
 
 
 
@@ -29,7 +30,26 @@ class BaseModel {
 
   requiredAttributes = []
 
-  type = 'unknown'
+  static type = type
+
+  type = type
+
+
+
+
+
+  /***************************************************************************\
+    Static Methods
+  \***************************************************************************/
+
+  static async find (conditions) {
+    try {
+      const items = await knex(this.type).where(conditions)
+      return items.map(item => new this(item))
+    } catch (error) {
+      throw error
+    }
+  }
 
 
 
@@ -38,6 +58,7 @@ class BaseModel {
   /***************************************************************************\
     Public Methods
   \***************************************************************************/
+
   _afterSave = () => {
     if (typeof this.afterSave === 'function') {
       this.afterSave()

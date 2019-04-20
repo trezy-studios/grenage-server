@@ -17,6 +17,13 @@ import {
 
 
 
+// Local constants
+const type = 'users'
+
+
+
+
+
 class UserModel extends BaseModel {
   /***************************************************************************\
     Class Properties
@@ -29,7 +36,9 @@ class UserModel extends BaseModel {
     'password',
   ]
 
-  type = 'users'
+  static type = type
+
+  type = type
 
 
 

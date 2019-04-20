@@ -22,7 +22,7 @@ const charactersRouter = new Router({ prefix: '/characters' })
 
 // Get characters for current user
 charactersRouter.get('/', async (context, next) => {
-  if (!context.isAuthenticated()) {
+  if (context.isUnauthenticated()) {
     context.errors.push('User is not authenticated')
     return context.status = 403
   }
@@ -39,7 +39,7 @@ charactersRouter.get('/', async (context, next) => {
 
 // Create new character
 charactersRouter.post('/new', async (context, next) => {
-  if (!context.isAuthenticated()) {
+  if (context.isUnauthenticated()) {
     context.errors.push('User is not authenticated')
     return context.status = 403
   }
@@ -64,7 +64,7 @@ charactersRouter.post('/new', async (context, next) => {
 
 // Get character by ID
 charactersRouter.get('/:id', async (context, next) => {
-  if (!context.isAuthenticated()) {
+  if (context.isUnauthenticated()) {
     context.errors.push('User is not authenticated')
     return context.status = 403
   }

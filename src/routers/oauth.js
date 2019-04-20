@@ -14,6 +14,7 @@ import {
   OAuthClientModel,
   UserModel,
 } from '../models'
+import { OAuthClientPresenter } from '../presenters'
 
 
 
@@ -63,9 +64,9 @@ oauthServer.exchange(oauth2orize.exchange.password(async (client, username, pass
 
 
 
-// Login
+// Create a new OAuth client
 oauthRouter.post('/clients/new', async (context, next) => {
-  if (!context.isAuthenticated()) {
+  if (context.isUnauthenticated()) {
     context.errors.push('User is not authenticated')
     return context.status = 403
   }
@@ -84,6 +85,26 @@ oauthRouter.post('/clients/new', async (context, next) => {
   try {
     await oauthClient.save()
     context.data = oauthClient.render()
+  } catch (error) {
+    context.errors.push(error)
+  }
+})
+
+
+
+
+
+// Get all OAuth clients for the current user
+oauthRouter.get('/clients', async (context, next) => {
+  if (context.isUnauthenticated()) {
+    context.errors.push('User is not authenticated')
+    return context.status = 403
+  }
+
+  const clients = await OAuthClientModel.find({ ownerID: context.state.user.id })
+
+  try {
+    context.data = OAuthClientPresenter.render(clients.map(client => client.attributes))
   } catch (error) {
     context.errors.push(error)
   }
