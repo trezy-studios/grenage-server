@@ -114,4 +114,23 @@ oauthRouter.get('/clients', async (context, next) => {
 
 
 
+// Get OAuth client by ID
+oauthRouter.get('/clients/:id', async (context, next) => {
+  if (context.isUnauthenticated()) {
+    context.errors.push('User is not authenticated')
+    return context.status = 403
+  }
+
+  try {
+    const client = await OAuthClientModel.findByID(context.params.id)
+    context.data = client.render()
+  } catch (error) {
+    context.errors.push(error)
+  }
+})
+
+
+
+
+
 export { oauthRouter }

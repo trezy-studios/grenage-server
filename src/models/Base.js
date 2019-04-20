@@ -51,6 +51,15 @@ class BaseModel {
     }
   }
 
+  static async findByID (id) {
+    try {
+      const item = await knex(this.type).where({ id }).first()
+      return new this(item)
+    } catch (error) {
+      throw error
+    }
+  }
+
 
 
 
@@ -85,15 +94,6 @@ class BaseModel {
     // super()
     this.isNew = !attributes.id
     this.attributes = attributes
-  }
-
-  findByID = async id => {
-    try {
-      const result = await knex(this.type).where({ id }).first()
-      this.update(result)
-    } catch (error) {
-      throw error
-    }
   }
 
   render = () => this.presenter.render({ ...this.attributes })
