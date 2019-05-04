@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "localRoot": "${workspaceFolder}",
+      "name": "Start and Attach to Server",
+      "preLaunchTask": "Start Containers",
+      "remoteRoot": "/app",
+      "request": "attach",
+      "restart": true,
+      "timeout": 60000,
+      "type": "node"
+    }
+  ]
+}

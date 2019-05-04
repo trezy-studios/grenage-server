@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "command": "docker-compose up -d",
+      "label": "Start Containers",
+      "type": "shell"
+    },
+    {
+      "command": "docker-compose down",
+      "label": "Stop Containers",
+      "type": "shell"
+    }
+  ]
+}
