@@ -12,6 +12,7 @@ app:
     - redis
   ports:
     - "3001:3001"
+    - "9229:9229"
   volumes:
     - .:/app
   working_dir: /app

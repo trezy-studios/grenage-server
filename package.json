@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "babel src --out-dir dist",
-    "dev": "nodemon --exec babel-node src/index.js",
+    "dev": "nodemon --inspect=0.0.0.0 --exec babel-node src/index.js",
     "start-containers": "yarn start-database-containers && yarn start-app-container",
     "migrate": "knex migrate:latest --env development",
     "seed": "knex seed:run --env development",
