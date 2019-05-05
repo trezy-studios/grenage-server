@@ -79,6 +79,7 @@ router.use(oauthRouter.routes())
 router.use(charactersRouter.routes())
 router.use(usersRouter.routes())
 app.use(router.routes())
+app.use(router.allowedMethods())
 
 console.log(`HTTP Server listening on port ${GRENAGE_API_PORT}`)
 app.listen(GRENAGE_API_PORT)
