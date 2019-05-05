@@ -154,6 +154,10 @@ class BaseModel {
     }
   }
 
+  get id () {
+    return this.attributes.id
+  }
+
 
 
 
