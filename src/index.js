@@ -26,8 +26,10 @@ import path from 'path'
 // Local imports
 import {
   bodyBuilder,
+  statusCodeGenerator,
   prepareDatabase,
   preparePassport,
+  statusCodeGenerator,
 } from './middlewares'
 import { generateRandomKey } from './helpers'
 import {
@@ -66,6 +68,7 @@ app.use(session({
   }),
 }, app))
 app.use(body())
+app.use(statusCodeGenerator())
 app.use(bodyBuilder())
 
 preparePassport()

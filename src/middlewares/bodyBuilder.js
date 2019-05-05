@@ -3,7 +3,6 @@ const bodyBuilder = () => async (context, next) => {
     start_ms: Date.now()
   }
   let body = {}
-  let status = 404
 
   context.errors = []
 
@@ -11,10 +10,6 @@ const bodyBuilder = () => async (context, next) => {
 
   if (context.errors.length) {
     body.errors = context.errors
-
-    if (status < 400) {
-      status = 500
-    }
   } else if (context.data) {
     body = {
       ...body,
@@ -39,11 +34,10 @@ const bodyBuilder = () => async (context, next) => {
   }
 
   context.body = body
-  context.status = status
-
-  if (status >= 400) {
-    context.throw(status, JSON.stringify(body, null, 2))
-  }
 }
+
+
+
+
 
 export { bodyBuilder }
