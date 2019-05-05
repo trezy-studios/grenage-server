@@ -9,7 +9,13 @@ const bodyBuilder = () => async (context, next) => {
   await next()
 
   if (context.errors.length) {
-    body.errors = context.errors
+    body.errors = context.errors.map(error => {
+      if (error instanceof Error) {
+        return error.message
+      }
+
+      return error
+    })
   } else if (context.data) {
     body = {
       ...body,
