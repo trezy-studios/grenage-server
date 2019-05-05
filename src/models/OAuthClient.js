@@ -1,4 +1,5 @@
 // Module imports
+import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import uuid from 'uuid/v4'
 
@@ -47,8 +48,33 @@ class OAuthClientModel extends BaseModel {
 
   beforeSave = () => {
     if (this.isNew) {
-      this.update({ secret: crypto.randomBytes(64).toString('hex') })
+      this.secret = crypto.randomBytes(32).toString('hex')
+      this.update({ secret: bcrypt.hashSync(this.secret, bcrypt.genSaltSync()) })
     }
+  }
+
+  render = () => {
+    const safeAttributes = { ...this.attributes }
+
+    delete safeAttributes.secret
+
+    if (this.secret) {
+      safeAttributes.secret = this.secret
+    }
+
+    return this.presenter.render({ ...safeAttributes })
+    }
+
+
+
+
+
+  /***************************************************************************\
+    Getters
+  \***************************************************************************/
+
+  get secret () {
+    return this.attributes.secret
   }
 }
 

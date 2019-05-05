@@ -76,15 +76,15 @@ oauthRouter.post('/clients/new', async (context, next) => {
     redirectURI,
   } = context.request.body
   const ownerID = context.state.user.id
-  const oauthClient = new OAuthClientModel({
+  const oAuthClient = new OAuthClientModel({
     name,
     ownerID,
     redirectURI,
   })
 
   try {
-    await oauthClient.save()
-    context.data = oauthClient.render()
+    await oAuthClient.save()
+    context.data = oAuthClient.render()
   } catch (error) {
     context.errors.push(error)
   }
