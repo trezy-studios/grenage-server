@@ -43,6 +43,26 @@ class OAuthClientModel extends BaseModel {
 
 
   /***************************************************************************\
+    Static Methods
+  \***************************************************************************/
+
+  static getBasicAuthFromContext = context => {
+    const authorizationHeader = context.get('Authorization')
+    const basicAuthHeaderPrefix = 'Basic '
+
+    if (authorizationHeader.startsWith(basicAuthHeaderPrefix)) {
+      const authorizationString = Buffer.from(authorizationHeader.substring(basicAuthHeaderPrefix.length), 'base64').toString('utf8')
+      return authorizationString.split(':')
+    }
+
+    return []
+  }
+
+
+
+
+
+  /***************************************************************************\
     Public Methods
   \***************************************************************************/
 
@@ -63,7 +83,7 @@ class OAuthClientModel extends BaseModel {
     }
 
     return this.presenter.render({ ...safeAttributes })
-    }
+  }
 
 
 

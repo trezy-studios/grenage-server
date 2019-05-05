@@ -26,7 +26,7 @@ import path from 'path'
 // Local imports
 import {
   bodyBuilder,
-  statusCodeGenerator,
+  verifyClientCredentials,
   prepareDatabase,
   preparePassport,
   statusCodeGenerator,
@@ -70,6 +70,7 @@ app.use(session({
 app.use(body())
 app.use(statusCodeGenerator())
 app.use(bodyBuilder())
+app.use(verifyClientCredentials())
 
 preparePassport()
 const passport = require('koa-passport')
