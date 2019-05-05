@@ -10,6 +10,15 @@
       "restart": true,
       "timeout": 60000,
       "type": "node"
+    },
+    {
+      "localRoot": "${workspaceFolder}",
+      "name": "Attach to Server",
+      "remoteRoot": "/app",
+      "request": "attach",
+      "restart": true,
+      "timeout": 60000,
+      "type": "node"
     }
   ]
 }
