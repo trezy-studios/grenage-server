@@ -46,7 +46,7 @@ const preparePassport = () => {
 
       return done(null, false)
     } catch (error) {
-      return done(err)
+      return done(error)
     }
   }))
 }
