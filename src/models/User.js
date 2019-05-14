@@ -48,18 +48,30 @@ class UserModel extends BaseModel {
     Public Methods
   \***************************************************************************/
 
-  render = () => {
-    const safeAttributes = { ...this.attributes }
-
-    delete safeAttributes.password
-
-    return this.presenter.render({ ...safeAttributes })
-  }
-
   beforeSave = () => {
     if (this.isNew) {
       this.update({ password: bcrypt.hashSync(this.attributes.password, bcrypt.genSaltSync()) })
     }
+  }
+
+
+
+
+
+  /***************************************************************************\
+    Getters
+  \***************************************************************************/
+
+  get password () {
+    return this.attributes.password
+  }
+
+  get safeAttributes () {
+    const safeAttributes = { ...this.attributes }
+
+    delete safeAttributes.password
+
+    return safeAttributes
   }
 }
 

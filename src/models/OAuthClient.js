@@ -74,9 +74,7 @@ class OAuthClientModel extends BaseModel {
   }
 
   render = () => {
-    const safeAttributes = { ...this.attributes }
-
-    delete safeAttributes.secret
+    const { safeAttributes } = this
 
     if (this.secret) {
       safeAttributes.secret = this.secret
@@ -93,8 +91,12 @@ class OAuthClientModel extends BaseModel {
     Getters
   \***************************************************************************/
 
-  get secret () {
-    return this.attributes.secret
+  get safeAttributes () {
+    const safeAttributes = { ...this.attributes }
+
+    delete safeAttributes.secret
+
+    return safeAttributes
   }
 }
 

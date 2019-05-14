@@ -27,69 +27,66 @@ const oauthRouter = new Router({ prefix: '/oauth' })
 
 
 // Create a new OAuth client
-oauthRouter.post('/clients/new', async (context, next) => {
-  if (context.isUnauthenticated()) {
-    context.errors.push('User is not authenticated')
-    return context.status = 403
-  }
+oauthRouter.post('/clients/new',
+  passport.authenticate('bearer', { session: false }),
+  async (context, next) => {
+    const {
+      name,
+      redirectURI,
+    } = context.request.body
+    const ownerID = context.state.user.id
+    const oAuthClient = new OAuthClientModel({
+      name,
+      ownerID,
+      redirectURI,
+    })
 
-  const {
-    name,
-    redirectURI,
-  } = context.request.body
-  const ownerID = context.state.user.id
-  const oAuthClient = new OAuthClientModel({
-    name,
-    ownerID,
-    redirectURI,
-  })
-
-  try {
-    await oAuthClient.save()
-    context.data = oAuthClient.render()
-  } catch (error) {
-    context.errors.push(error)
+    try {
+      await oAuthClient.save()
+      context.data = oAuthClient.render()
+    } catch (error) {
+      context.status = 500
+      context.errors.push(error)
+    }
   }
-})
+)
 
 
 
 
 
 // Get all OAuth clients for the current user
-oauthRouter.get('/clients', async (context, next) => {
-  if (context.isUnauthenticated()) {
-    context.errors.push('User is not authenticated')
-    return context.status = 403
-  }
+oauthRouter.get('/clients',
+  passport.authenticate('bearer', { session: false }),
+  async (context, next) => {
+    const clients = await OAuthClientModel.find({ ownerID: context.state.user.id })
 
-  const clients = await OAuthClientModel.find({ ownerID: context.state.user.id })
-
-  try {
-    context.data = OAuthClientPresenter.render(clients.map(client => client.attributes))
-  } catch (error) {
-    context.errors.push(error)
+    try {
+      context.data = OAuthClientModel.renderList(clients)
+    } catch (error) {
+      context.status = 401
+      context.errors.push(error)
+    }
   }
-})
+)
 
 
 
 
 
 // Get OAuth client by ID
-oauthRouter.get('/clients/:id', async (context, next) => {
-  if (context.isUnauthenticated()) {
-    context.errors.push('User is not authenticated')
-    return context.status = 403
+oauthRouter.get('/clients/:id',
+  passport.authenticate('bearer', { session: false }),
+  async (context, next) => {
+    try {
+      const client = await OAuthClientModel.findByID(context.params.id)
+      context.data = client.render()
+    } catch (error) {
+      context.status = 401
+      context.errors.push(error)
+    }
   }
-
-  try {
-    const client = await OAuthClientModel.findByID(context.params.id)
-    context.data = client.render()
-  } catch (error) {
-    context.errors.push(error)
-  }
-})
+)
 
 
 

@@ -23,24 +23,21 @@ const type = 'unknown'
 
 class BaseModel {
   /***************************************************************************\
-    Class Properties
-  \***************************************************************************/
-
-  defaultAttributes = {}
-
-  requiredAttributes = []
-
-  static type = type
-
-  type = type
-
-
-
-
-
-  /***************************************************************************\
     Static Methods
   \***************************************************************************/
+
+  static async delete (conditions) {
+    if (typeof conditions === 'string') {
+      conditions = { id: conditions }
+    }
+
+    try {
+      const deletedItemCount = await knex(this.type).where(conditions).delete()
+      return deletedItemCount
+    } catch (error) {
+      throw error
+    }
+  }
 
   static async find (conditions) {
     try {
@@ -60,12 +57,46 @@ class BaseModel {
     }
   }
 
+  static renderList = (list = [], extra = {}) => {
+    if (!list.length) {
+      return list
+    }
+
+    const { presenter } = list[0]
+
+    return presenter.render(list.map(({ safeAttributes }) => safeAttributes), extra)
+  }
+
 
 
 
 
   /***************************************************************************\
-    Public Methods
+    Class Properties
+  \***************************************************************************/
+
+  defaultAttributes = {}
+
+  defaultOptions = {
+    generateID: true,
+  }
+
+  idAttribute = 'id'
+
+  ignoreOnSave = []
+
+  requiredAttributes = []
+
+  static type = type
+
+  type = type
+
+
+
+
+
+  /***************************************************************************\
+    Private Methods
   \***************************************************************************/
 
   _afterSave = () => {
@@ -90,19 +121,37 @@ class BaseModel {
     Public Methods
   \***************************************************************************/
 
-  constructor (attributes = {}) {
-    // super()
-    this.isNew = !attributes.id
+  constructor (attributes = {}, options = {}) {
+    this.isNew = !attributes[this.idAttribute]
+    this.options = options
+
     this.attributes = attributes
   }
 
-  render = () => this.presenter.render({ ...this.attributes })
+  delete = async () => {
+    try {
+      await this.delete(this[this.idAttribute])
+      return true
+    } catch (error) {
+      throw error
+    }
+  }
+
+  render = (extra = {}) => this.presenter.render({ ...this.safeAttributes }, extra)
 
   save = async () => {
     try {
       this._beforeSave()
 
-      const [result] = await knex(this.type).insert(this.attributes).returning('*')
+      const attributesToSave = Object.entries(this.attributes).reduce((accumulator, [key, value]) => {
+        if (!this.ignoreOnSave.includes(key)) {
+          accumulator[key] = value
+        }
+
+        return accumulator
+      }, {})
+
+      const [result] = await knex(this.type).insert(attributesToSave).returning('*')
 
       this.update(result)
 
@@ -155,7 +204,18 @@ class BaseModel {
   }
 
   get id () {
-    return this.attributes.id
+    return this.attributes[this.idAttribute]
+  }
+
+  get options () {
+    return {
+      ...this.defaultOptions,
+      ...this._options,
+    }
+  }
+
+  get safeAttributes () {
+    return { ...this.attributes }
   }
 
 
@@ -173,8 +233,16 @@ class BaseModel {
       ...attributes,
     }
 
-    if (!attributes.id) {
-      this._attributes.id = uuid()
+    if (this.options.generateID && !attributes[this.idAttribute]) {
+      this._attributes[this.idAttribute] = uuid()
+    }
+  }
+
+  set options (options) {
+    this._originalOptions = options
+    this._options = {
+      ...this.defaultOptions,
+      ...options,
     }
   }
 }

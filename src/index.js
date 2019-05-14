@@ -14,9 +14,7 @@ import compress from 'koa-compress'
 import cors from '@koa/cors'
 import logger from 'koa-logger'
 import noTrailingSlash from 'koa-no-trailing-slash'
-import RedisStore from 'koa-redis'
 import Router from 'koa-router'
-import session from 'koa-session'
 import path from 'path'
 
 
@@ -26,10 +24,10 @@ import path from 'path'
 // Local imports
 import {
   bodyBuilder,
-  verifyClientCredentials,
   prepareDatabase,
   preparePassport,
   statusCodeGenerator,
+  verifyCredentials,
 } from './middlewares'
 import { generateRandomKey } from './helpers'
 import {
@@ -62,21 +60,15 @@ app.use(logger())
 app.use(compress())
 app.use(cors())
 app.use(prepareDatabase())
-app.use(session({
-  store: new RedisStore({
-    host: 'redis',
-  }),
-}, app))
 app.use(body())
 app.use(statusCodeGenerator())
 app.use(bodyBuilder())
-app.use(verifyClientCredentials())
+app.use(verifyCredentials())
 
 preparePassport()
 const passport = require('koa-passport')
 
 app.use(passport.initialize())
-app.use(passport.session())
 
 router.use(authRouter.routes())
 router.use(oauthRouter.routes())
