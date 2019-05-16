@@ -34,6 +34,7 @@ import {
   authRouter,
   charactersRouter,
   oauthRouter,
+  pingRouter,
   usersRouter,
 } from './routers'
 
@@ -71,8 +72,9 @@ const passport = require('koa-passport')
 app.use(passport.initialize())
 
 router.use(authRouter.routes())
-router.use(oauthRouter.routes())
 router.use(charactersRouter.routes())
+router.use(oauthRouter.routes())
+router.use(pingRouter.routes())
 router.use(usersRouter.routes())
 app.use(router.routes())
 app.use(router.allowedMethods())
